@@ -1,14 +1,19 @@
 const date = require('../generateDate.js');
 const Task = require('../models/task');
 
-let toDoList = [];
+//let toDoList = [];
 
 exports.getMainPage = (req, res) => {
-    const itemsList = Task.fetchTasks();
+    Task.fetchTasks(items => {
+        let day = date.getDate();
+        res.render("index.ejs", {date: day, toDoItems: items});
+    });
+
+    /*const itemsList = Task.fetchTasks();
     res.render("index.ejs", {
         date: date.getWeekDay(),
         toDoItems: itemsList
-    });
+    });*/
 };
 
 exports.postNewItem = (req, res) => {
@@ -18,3 +23,9 @@ exports.postNewItem = (req, res) => {
     item.saveTask();
     res.redirect("/");
 };
+
+exports.deleteItem = (req, res) => {
+    console.log(req.body.checkbox);
+    Task.deleteItem(req.body.checkbox);
+    res.redirect('/');
+}

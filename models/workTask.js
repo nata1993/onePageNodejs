@@ -1,16 +1,16 @@
 const fs = require('fs');
 const path = require('path');
-const pathToRegulatTaskFile = path.join(path.dirname(process.mainModule.filename), 'data', 'regularTask.json');
+const pathToWorkTaskFile = path.join(path.dirname(process.mainModule.filename), 'data', 'workTask.json');
 
 //let toDoList = [];
 
-module.exports = class Task {
+module.exports = class WorkTask {
     constructor(task){
         this.description = task;
     }
 
-    saveTask(){
-        fs.readFile(pathToRegulatTaskFile, (error, fileContent) => {
+    saveWorkTasks(){
+        fs.readFile(pathToWorkTaskFile, (error, fileContent) => {
             let tasks = [];
 
             if (!error){
@@ -19,15 +19,15 @@ module.exports = class Task {
 
             tasks.push(this);
 
-            fs.writeFile(pathToRegulatTaskFile, JSON.stringify(tasks), (error) =>{
+            fs.writeFile(pathToWorkTaskFile, JSON.stringify(tasks), (error) =>{
                 console.log("error", error);
             });
         });
         //toDoList.push(this);
     }
 
-    static fetchTasks(callback){
-        fs.readFile(pathToRegulatTaskFile, (error, fileContent) => {
+    static fetchWorkTasks(callback){
+        fs.readFile(pathToWorkTaskFile, (error, fileContent) => {
             if (error){
                 callback([]);   // this callback is parameter from function
             }
@@ -40,7 +40,7 @@ module.exports = class Task {
     }
 
     static deleteItem(description){
-        fs.readFile(pathToRegulatTaskFile, (error, fileContent) => {
+        fs.readFile(pathToWorkTaskFile, (error, fileContent) => {
             let tasks = [];
             if(!error){
                 tasks = JSON.parse(fileContent);
@@ -54,7 +54,7 @@ module.exports = class Task {
                 }
             }
 
-            fs.writeFile(pathToRegulatTaskFile, JSON.stringify(tasks), (error) =>{
+            fs.writeFile(pathToWorkTaskFile, JSON.stringify(tasks), (error) =>{
                 console.group("error while trying to delete", error);
             });
         });

@@ -8,10 +8,12 @@
 
     <div class="box">
         <% for(var i = 0; i< workItems.length; i++){ %>
-            <div class="item">
-                <input type="checkbox">
-                <p><%= workItems[i] %></p>
-            </div>
+            <form method="POST" action="/deleteWork">
+                <div class="item">
+                    <input type="checkbox" name="checkbox" value="<%= workItems[i].description %>" onchange="this.form.submit()">
+                    <p><%= workItems[i].description %></p>
+                </div>
+            </form>
         <% } %>
         <form action="/work" class="class" method="POST">
             <input type="text" name="newTask" placeholder="New Task">
