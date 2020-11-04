@@ -3,6 +3,8 @@
 const express = require("express");
 const bParser = require("body-parser");
 const ejs = require("ejs");
+require('./models/db');
+
 const mainPage = require('./routes/main');
 
 const about = require('./routes/about');

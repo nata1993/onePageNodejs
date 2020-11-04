@@ -1,31 +1,46 @@
 const date = require('../generateDate.js');
-const Task = require('../models/task');
+const mongoose = require('mongoose');
 
-//let toDoList = [];
+const Task = mongoose.model('Task');
 
 exports.getMainPage = (req, res) => {
-    Task.fetchTasks(items => {
-        let day = date.getDate();
-        res.render("index.ejs", {date: day, toDoItems: items});
-    });
 
-    /*const itemsList = Task.fetchTasks();
-    res.render("index.ejs", {
-        date: date.getWeekDay(),
-        toDoItems: itemsList
-    });*/
+    let day = date.getDate();
+    Task.find((error, tasks) => {
+        if (!error){
+            res.render('index.ejs', {date: day, toDoItems: tasks});
+        }
+        else{
+            console.log("failed data retrieval: ", error);
+        }
+    });
 };
 
 exports.postNewItem = (req, res) => {
-    /*let newTask = req.body.newTask;
-    toDoList.push(newTask);*/
-    const item = new Task(req.body.newTask);
-    item.saveTask();
-    res.redirect("/");
+    const item = req.body.newTask;
+    let newTask = new Task();
+    newTask.description = item;
+
+    newTask.save((error, response) => {
+        if(!error){
+            res.redirect('/');
+        }
+        else{
+            console.log(error);
+        }
+    });
 };
 
 exports.deleteItem = (req, res) => {
     console.log(req.body.checkbox);
-    Task.deleteItem(req.body.checkbox);
-    res.redirect('/');
+    const checkedItemId = req.body.checkbox;
+    Task.findByIdAndRemove(checkedItemId, function(error){
+        if(!error){
+            console.log("deleted item: ", checkedItemId);
+            res.redirect('/');
+        }
+        else{
+            console.log("error in deleting item from DB");
+        }
+    });
 }
